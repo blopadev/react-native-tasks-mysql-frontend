@@ -1,15 +1,21 @@
 import React from 'react'
 import { View, Text, FlatList } from 'react-native'
 
-const TasksList = ({tasks}) => {
+import TaskItem from './TaskItem'
+
+const TasksList = ({ tasks }) => {
+
+  const renderItem = ({ item }) => {
+    return <TaskItem task={item} />
+  }
+
+
   return (
     <FlatList
+      style={{width: '100%'}}
       data={tasks}
       keyExtractor={(item) => item.id + ''} // con + '' --- convierte el id en string, que es lo espera el KeyStractor
-      renderItem={({ item }) => {
-        console.log(item);
-        return <Text>{item.title} </Text>
-      }}
+      renderItem={renderItem }
     />
   )
 }
