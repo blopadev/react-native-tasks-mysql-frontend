@@ -10,24 +10,38 @@ const TaskFormScreen = ({ navigation, route }) => {
     description: "",
   });
 
+  const [editing, setEditing] = useState(false);
+
   const handleChange = (name, value) => setTask({ ...task, [name]: value });
 
   const handleSubmit = async () => {
-    /* try {
+    try {
       if (!editing) {
         await saveTask(task);
       } else {
-        console.log(route.params.id, task)
-        await updateTask(route.params.id, {...task});
+        //console.log(route.params.id, task)
+        await updateTask(route.params.id, { ...task });
       }
       navigation.navigate("HomeScreen");
     } catch (error) {
       console.log(error);
-    } */
-    await saveTask(task);
+    }
+    /* await saveTask(task);
     console.log(task);
-    navigation.navigate("HomeScreen");
+    navigation.navigate("HomeScreen"); */
   };
+
+  useEffect(() => {
+    if (route.params && route.params.id) {
+      setEditing(true);
+      navigation.setOptions({ headerTitle: "Updating Task" });
+      (async () => {
+        const task = await getTask(route.params.id);
+        setTask({ title: task.title, description: task.description });
+      })();
+    }
+  }, []);
+
   return (
     <Layout>
       <TextInput
@@ -35,16 +49,26 @@ const TaskFormScreen = ({ navigation, route }) => {
         placeholder="Write a Title"
         placeholderTextColor="#576574"
         onChangeText={(text) => handleChange("title", text)}
+        value={task.title}
       />
       <TextInput
         style={styles.input}
         placeholder="Write a Description"
         placeholderTextColor="#576574"
         onChangeText={(text) => handleChange("description", text)}
+        value={task.description}
       />
-      <TouchableOpacity style={styles.buttonSave}  onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Save Task</Text>
-      </TouchableOpacity>
+
+      {!editing ? (
+        <TouchableOpacity style={styles.buttonSave} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Save Task</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.buttonUpdate} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Update Task</Text>
+        </TouchableOpacity>
+      )}
+
     </Layout>
   )
 }

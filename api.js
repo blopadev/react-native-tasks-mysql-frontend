@@ -33,7 +33,7 @@ export const getTask = async (taskId) => {
 };
 
 export const updateTask = async (taskId, newTask) => {
-  console.log(taskId, newTask)
+  //console.log(taskId, newTask)
   const res = await fetch(`${API}/${taskId}`, {
     method: "PUT",
     headers: {
