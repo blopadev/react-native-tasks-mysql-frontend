@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { FlatList, SafeAreaView, Alert, RefreshControl } from "react-native";
 
 import TaskItem from './TaskItem'
-import { getTasks } from '../api'
+import { deleteTask, getTasks } from "../api";
 
 const TasksList = () => {
 
@@ -22,7 +22,7 @@ const TasksList = () => {
 
 
   const renderItem = ({ item }) => {
-    return <TaskItem task={item} />
+    return <TaskItem task={item} handleDelete={handleDelete} />
   }
 
   const onRefresh = React.useCallback(async () => {
@@ -30,6 +30,11 @@ const TasksList = () => {
     await loadTasks();
     setRefreshing(false)
   }, []);
+
+  const handleDelete = async (id) => {
+    await deleteTask(id);
+    await loadTasks();
+  };
 
   return (
     <FlatList
