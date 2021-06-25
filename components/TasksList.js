@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, Alert, RefreshControl } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 import TaskItem from './TaskItem'
 import { deleteTask, getTasks } from "../api";
@@ -8,6 +9,8 @@ const TasksList = () => {
 
   const [tasks, setTasks] = useState([])
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const isFocused = useIsFocused();  // es  true or false según cambie de pantalla o no
 
   const loadTasks = async () => {
     const data = await getTasks()
@@ -18,7 +21,7 @@ const TasksList = () => {
   useEffect(() => {
     //console.log('loaded') // para comprobar que se ejecuta el useEffect
     loadTasks()
-  }, [])
+  }, [isFocused]) // cada vez que cambio de pantalla se ejecuta el useEffect
 
 
   const renderItem = ({ item }) => {
